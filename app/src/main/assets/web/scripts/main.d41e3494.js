@@ -217,20 +217,27 @@ var counter;
 var speedometer;
 var acceleration;
 
+var points = 0;
+var last_acc = 0;
+var combo = 0;
+var comboPoints = 0;
+
 window.speed = 0;
 window.acc = 0;
+window.speedLimit = 90;
+window.pointsPerKm = 20;
 
-window.onload = (function() {
-  setTimeout(function(){
+window.onload = (function () {
+  setTimeout(function () {
     countUpInit();
     speedometerInit();
 
-    setInterval(function() {
+    setInterval(function () {
       var rndSpeed = parseInt(Math.random() * 100);
       var rndAcc = parseInt(Math.random() * 10);
 
-      setSpeed(window.speed);
-      setAccelaration(rndAcc);
+      checkSpeed(window.speed);
+      checkAccelaration(rndAcc);
 
     }, 1000);
 
@@ -245,7 +252,7 @@ function countUpInit() {
     separator: ',',
     decimal: '.'
   };
-  counter = new CountUp("counter", 0, 0, 3, 1, options);
+  counter = new CountUp("counter", 0, 0, 2, 1, options);
   counter.start();
 }
 
@@ -253,12 +260,69 @@ function speedometerInit() {
   speedometer = $('.radial-progress');
 }
 
-function setSpeed(speed) {
-  counter.update(speed);
+function setSpeedometer(speed) {
   speedometer.attr('data-progress', speed);
   speedometer.find('.numbers span').html(speed);
 }
 
-function setAccelaration(acc) {
+function setPoints(points) {
+  if (points > window.points) {
+    //getting more points = good driver
+    counter.update(points);
+    pulse();
+  } else if (points < window.points) {
+    //getting lerss points = bad driver
+    counter.update(points);
+    drop();
+  }
+
+  window.points = points;
+}
+
+function checkSpeed() {
+  var speed = window.speed;
+  setSpeedometer(speed);
+
+  //check speed limit and give points
+  if (speed <= window.speedLimit) {
+    var kmPerSec = window.speed / 60 / 60;
+    comboPoints += /*(Math.random() * 0.1)  */ kmPerSec * pointsPerKm;
+  } else {
+    comboPoints -= (speed - window.speedLimit);
+  }
+  setPoints(comboPoints);
+}
+
+function checkAccelaration(acceleration) {
   console.log('acceleration', acceleration);
+}
+
+function pulse() {
+
+  $('#counter').removeClass('bad');
+  $('#counter').addClass('good');
+
+  clearAnimation();
+  setTimeout(function () {
+    $('#counter').addClass('pulse')
+  }, 100);
+}
+
+function drop() {
+
+  $('#counter').removeClass('bad');
+  $('#counter').addClass('bad');
+
+  clearAnimation();
+  setTimeout(function () {
+
+    //$('#counter').addClass('shake')
+
+  }, 100);
+
+}
+
+function clearAnimation() {
+  $('#counter').removeClass('pulse');
+  //$('#counter').removeClass('shake');
 }
