@@ -19,6 +19,6 @@ public class StartFragment extends BaseFragment {
 
     @OnClick(R.id.btnStart)
     public void launchNextView() {
-        ((MainActivity)getActivity()).setFragment(new DriveFragment(), true);
+        ((MainActivity)getActivity()).setFragment(new SettingsFragment(), true);
     }
 }

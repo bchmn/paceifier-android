@@ -5,12 +5,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.widget.Toast;
-
-import com.squareup.okhttp.Request;
-import com.squareup.okhttp.Response;
-
-import java.io.IOException;
 
 import butterknife.ButterKnife;
 import dagger.ObjectGraph;
@@ -19,8 +13,8 @@ import pacifier.com.app.R;
 import pacifier.com.app.modules.ActivityModule;
 
 public class MainActivity extends AppCompatActivity {
-
     ObjectGraph mActivityGraph;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,6 +28,16 @@ public class MainActivity extends AppCompatActivity {
         mActivityGraph.inject(this);
 
         setFragment(new StartFragment(), false);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
     }
 
     protected Object[] getModules() {

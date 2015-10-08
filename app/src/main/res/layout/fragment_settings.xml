@@ -5,9 +5,118 @@
     android:layout_height="match_parent"
     android:gravity="center_horizontal">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Settings" />
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.33">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:text="Accelerometer" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:id="@+id/tvAccelerometerX"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+            <TextView
+                android:id="@+id/tvAccelerometerY"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+            <TextView
+                android:id="@+id/tvAccelerometerZ"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
 
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.33">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:text="Geomagnetic" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:id="@+id/tvGeomagneticX"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+            <TextView
+                android:id="@+id/tvGeomagneticY"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+            <TextView
+                android:id="@+id/tvGeomagneticZ"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"/>
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.33">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="0.25"
+            android:text="Orientation" />
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="0.75"
+            android:layout_gravity="center_horizontal">
+            <TextView
+                android:id="@+id/tvOrientationX"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+            <TextView
+                android:id="@+id/tvOrientationY"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+            <TextView
+                android:id="@+id/tvOrientationZ"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="0.33"/>
+
+        </LinearLayout>
+    </LinearLayout>
 </LinearLayout>
