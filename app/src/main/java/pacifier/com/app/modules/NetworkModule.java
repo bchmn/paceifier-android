@@ -15,19 +15,11 @@ import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
-import pacifier.com.app.ui.BaseFragment;
-import pacifier.com.app.ui.MainActivity;
-import pacifier.com.app.ui.StartFragment;
 
 import static com.jakewharton.byteunits.DecimalByteUnit.MEGABYTES;
 import static java.util.concurrent.TimeUnit.SECONDS;
 
 @Module(
-    injects = {
-        MainActivity.class,
-        BaseFragment.class,
-        StartFragment.class
-    },
     complete = false,
     library = true
 )

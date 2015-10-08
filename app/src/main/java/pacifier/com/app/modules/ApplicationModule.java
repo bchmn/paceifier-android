@@ -1,12 +1,15 @@
 package pacifier.com.app.modules;
 
 import android.app.Application;
+import android.location.LocationManager;
 
 import javax.inject.Singleton;
 
 import dagger.Module;
 import dagger.Provides;
 import pacifier.com.app.PaceifierApp;
+
+import static android.content.Context.LOCATION_SERVICE;
 
 @Module(
     includes = {
@@ -27,4 +30,7 @@ public class ApplicationModule {
     @Provides
     @Singleton
     Application provideApplication() { return this.app; }
+
+    @Provides @Singleton
+    LocationManager provideLocationManager() { return (LocationManager)app.getSystemService(LOCATION_SERVICE); }
 }

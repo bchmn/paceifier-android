@@ -5,12 +5,22 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.widget.Toast;
+
+import com.squareup.okhttp.Request;
+import com.squareup.okhttp.Response;
+
+import java.io.IOException;
 
 import butterknife.ButterKnife;
+import dagger.ObjectGraph;
 import pacifier.com.app.PaceifierApp;
 import pacifier.com.app.R;
+import pacifier.com.app.modules.ActivityModule;
 
 public class MainActivity extends AppCompatActivity {
+
+    ObjectGraph mActivityGraph;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -19,24 +29,21 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-        ((PaceifierApp) getApplication()).inject(this);
         ButterKnife.bind(this);
+        mActivityGraph = ((PaceifierApp)getApplication()).getApplicationGraph().plus(getModules());
+        mActivityGraph.inject(this);
 
         setFragment(new StartFragment(), false);
+    }
 
-//        String netResponse = null;
-//        try {
-//            Request request = new Request.Builder()
-//                    .url("https://api.ipify.org/?format=text")
-//                    .build();
-//
-//            Response response = mClient.newCall(request).execute();
-//            netResponse = response.body().string();
-//            Toast.makeText(MainActivity.this, netResponse, Toast.LENGTH_SHORT).show();
-//        }
-//        catch (IOException e) {
-//
-//        }
+    protected Object[] getModules() {
+        return new Object[] {
+                new ActivityModule(this),
+        };
+    }
+
+    public void inject(Object object) {
+        mActivityGraph.inject(object);
     }
 
     public void setFragment(Fragment fragment, boolean addCurrentFragmentToBackStack) {
@@ -45,5 +52,11 @@ public class MainActivity extends AppCompatActivity {
         if (addCurrentFragmentToBackStack)
             transaction.addToBackStack(null);
         transaction.commit();
+    }
+
+    @Override
+    protected void onDestroy() {
+        mActivityGraph = null;
+        super.onDestroy();
     }
 }

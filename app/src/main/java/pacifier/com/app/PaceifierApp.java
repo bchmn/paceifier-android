@@ -13,6 +13,7 @@ public class PaceifierApp extends Application {
     public void onCreate() {
         super.onCreate();
         this.applicationGraph = ObjectGraph.create(getModules());
+        this.applicationGraph.inject(this);
     }
 
     protected Object[] getModules() {
@@ -21,7 +22,7 @@ public class PaceifierApp extends Application {
         };
     }
 
-    public void inject(Object object) {
-        this.applicationGraph.inject(object);
+    public ObjectGraph getApplicationGraph() {
+        return this.applicationGraph;
     }
 }
