@@ -12,6 +12,7 @@ import dagger.Provides;
 import pacifier.com.app.PaceifierApp;
 import pacifier.com.app.managers.GPSSpeedManager;
 import pacifier.com.app.managers.TiltSpeedManager;
+import pacifier.com.app.utils.Logger;
 
 import static android.content.Context.LOCATION_SERVICE;
 

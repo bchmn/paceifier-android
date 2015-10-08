@@ -6,9 +6,11 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 
+import java.util.Arrays;
+
 import de.greenrobot.event.EventBus;
 import pacifier.com.app.events.SensorChangeEvent;
-import pacifier.com.app.events.SpeedChangeEvent;
+import pacifier.com.app.utils.Logger;
 
 public class TiltSpeedManager implements SensorEventListener{
     final Application mApp;
@@ -21,6 +23,7 @@ public class TiltSpeedManager implements SensorEventListener{
 
     float[] mGravity;
     float[] mGeomagnetic;
+    float[] mGeomagneticBaseline;
     String[] mAccelerometer =  new String[3];
     String[] mMagnetic =  new String[3];
     String[] mOrientationString =  new String[3];
@@ -38,8 +41,8 @@ public class TiltSpeedManager implements SensorEventListener{
     public void startListening() {
         if (!isListening) {
             isListening = true;
-            mSensorManager.registerListener(this, mAccelerometerSensor, SensorManager.SENSOR_DELAY_UI);
-            mSensorManager.registerListener(this, mMagnometerSensor, SensorManager.SENSOR_DELAY_UI);
+            mSensorManager.registerListener(this, mAccelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
+            mSensorManager.registerListener(this, mMagnometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
     }
 
@@ -62,6 +65,14 @@ public class TiltSpeedManager implements SensorEventListener{
             else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
             {
                 mGeomagnetic = sensorEvent.values;
+                if (null == mGeomagneticBaseline)
+                    mGeomagneticBaseline = Arrays.copyOf(mGeomagnetic, mGeomagnetic.length);
+            }
+
+            if (null != mGeomagneticBaseline && null != mGeomagnetic) {
+                float diff = Math.abs(mGeomagneticBaseline[1] - mGeomagnetic[1]);
+                float speed = diff * 5;
+                Logger.l("Speed: " + Float.toString(speed) + " km/h");
             }
 
             if (null != mGravity && null != mGeomagnetic) {
