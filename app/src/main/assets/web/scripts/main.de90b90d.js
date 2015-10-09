@@ -224,10 +224,15 @@ var comboPoints = 0;
 var comboStartTime = new Date();
 var comboPercent = 0;
 var lastSplash = (new Date()).getTime();
+
+var inAnimation = 'zoomInDown';
+var outAnimation = 'fadeOut';
+
 window.speed = 0;
 window.acc = 0;
 window.speedLimit = 90;
 window.pointsPerKm = 20;
+
 
 window.onload = (function () {
   setTimeout(function () {
@@ -268,13 +273,14 @@ function setSpeedometer(speed) {
 }
 
 function setPoints(points) {
+
   if (points > window.points) {
     //getting more points = good driver
     counter.update(points);
     $('#counter').removeClass('bad');
     $('#counter').addClass('good');
     pulse();
-  } else if (points < window.points) {
+  } else if (points <= window.points && speed>0) {
     //getting lerss points = bad driver
 
     $('#counter').removeClass('good');
@@ -299,11 +305,12 @@ function checkSpeed() {
   if (speed <= window.speedLimit) {
     //good job
     var kmPerSec = window.speed / 60 / 60;
-    comboPoints += /*(Math.random() * 0.1)  */ kmPerSec * pointsPerKm * combo / 5;
+    comboPoints += kmPerSec * pointsPerKm * combo / 5;
   } else {
     showSplash('bad', 1);
     comboPoints -= (speed - window.speedLimit);
   }
+  comboPoints = Math.max(0, (comboPoints));
   setPoints(comboPoints);
 
   //check if combo if there
@@ -344,8 +351,8 @@ function showSplash(status, points) {
       txt = arr[rnd];
       splash_score.html("-" + String(points));
       clss = 'red';
-      comboPoints -= points;
-      counter.update(comboPoints - points);
+      points = Math.max(0, (comboPoints - points));
+      counter.update(points);
 
       break;
     case 'good':
@@ -368,20 +375,18 @@ function showSplash(status, points) {
   splash.removeClass('yellow');
   splash.addClass(clss);
 
-  var inAnimation = 'zoomInDown';
-  var outAnimation = 'flipOutX';
   splash.removeClass(outAnimation);
   splash.removeClass(inAnimation);
   splash.addClass(inAnimation);
   setTimeout(function() {
     splash.removeClass(inAnimation);
     splash.addClass(outAnimation);
-  }, 3000);
+  }, 1700);
 }
 
 
 function checkAccelaration(acceleration) {
-  console.log('acceleration', acceleration);
+  //console.log('acceleration', acceleration);
 }
 
 function pulse() {
