@@ -233,7 +233,6 @@ window.acc = 0;
 window.speedLimit = 90;
 window.pointsPerKm = 20;
 
-
 window.onload = (function () {
   setTimeout(function () {
     countUpInit();
@@ -246,11 +245,17 @@ window.onload = (function () {
       checkSpeed(window.speed);
       checkAccelaration(rndAcc);
 
+      speedLimitInit();
+
     }, Math.max((700 - combo * 100), 100));
 
   }, 500);
 
 });
+
+function speedLimitInit() {
+  $('#speedLimit').html(window.speedLimit);
+}
 
 function countUpInit() {
   var options = {
@@ -280,7 +285,7 @@ function setPoints(points) {
     $('#counter').removeClass('bad');
     $('#counter').addClass('good');
     pulse();
-  } else if (points <= window.points && speed>0) {
+  } else if (points <= window.points && speed > 0) {
     //getting lerss points = bad driver
 
     $('#counter').removeClass('good');
@@ -316,15 +321,15 @@ function checkSpeed() {
   //check if combo if there
   if ((speed > 0) && (speed <= window.speedLimit)) {
     var comboTime = ((new Date()).getTime() - comboStartTime.getTime()) / 1000;
-    comboPercent = (comboTime / (combo*4));
-    $('#combo-bar').css('width', parseInt(comboPercent*100) + '%');
+    comboPercent = (comboTime / (combo * 4));
+    $('#combo-bar').css('width', parseInt(comboPercent * 100) + '%');
     if (comboTime > (combo * 4)) {
       //next stage!
       comboStartTime = new Date();
-      if (combo <=5) combo++;
+      if (combo <= 5) combo++;
       showSplash('good', combo);
       $('#combo').html("x" + String(combo));
-      $('#next-combo').html("x" + String(combo+1));
+      $('#next-combo').html("x" + String(combo + 1));
       $('#counter').removeClass('combo-' + (combo - 1));
       $('#counter').addClass('combo-' + combo);
     }
@@ -346,7 +351,17 @@ function showSplash(status, points) {
   var clss = '';
   switch (status) {
     case 'bad':
-      var arr = ["Slow Down!", "Careful!", "No! No! No!"];
+      var arr = ["Slow Down!", "What's The Rush?!", "No! No! No!"];
+      var rnd = parseInt(Math.random() * arr.length);
+      txt = arr[rnd];
+      splash_score.html("-" + String(points));
+      clss = 'red';
+      points = Math.max(0, (comboPoints - points));
+      counter.update(points);
+
+      break;
+    case 'boom':
+      var arr = ["Boom!", "Are You Alive??", "Careful!"];
       var rnd = parseInt(Math.random() * arr.length);
       txt = arr[rnd];
       splash_score.html("-" + String(points));
@@ -378,14 +393,21 @@ function showSplash(status, points) {
   splash.removeClass(outAnimation);
   splash.removeClass(inAnimation);
   splash.addClass(inAnimation);
-  setTimeout(function() {
+  setTimeout(function () {
     splash.removeClass(inAnimation);
     splash.addClass(outAnimation);
   }, 1700);
 }
 
-
-function checkAccelaration(acceleration) {
+function checkAccelaration() {
+  if (window.acc > 1) {
+    var cont = $('.container');
+    cont.removeClass('pulse');
+    showSplash('boom', 20);
+    setTimeout(function () {
+      cont.addClass('pulse');
+    }, 100);
+  }
   //console.log('acceleration', acceleration);
 }
 
