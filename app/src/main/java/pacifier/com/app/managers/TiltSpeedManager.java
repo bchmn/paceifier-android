@@ -24,7 +24,7 @@ public class TiltSpeedManager implements SensorEventListener{
     float[] mPreviousGravity;
     float[] mGeomagnetic;
     float[] mGeomagneticBaseline;
-    Float mLastSpeed;
+    Long mLastSpeed;
 
 
 
@@ -83,12 +83,17 @@ public class TiltSpeedManager implements SensorEventListener{
             }
 
             if (null != mGeomagneticBaseline && null != mGeomagnetic) {
-                float diff = Math.abs(mGeomagneticBaseline[0] - mGeomagnetic[0]);
-                float speedF = diff * 3;
-                //float smooth_speed = (null != mLastSpeed) ? (float)((mLastSpeed * 0.8) + (speedF * 0.2)) : speedF;
-                int speed = Math.round(speedF);
-                mLastSpeed = speedF;
-                Logger.l("Speed: " + Integer.toString(speed) + " km/h");
+                double baselineRadian = Math.atan((double)(mGeomagneticBaseline[0]/mGeomagneticBaseline[1]));
+                double radian = Math.atan((double)(mGeomagnetic[0]/mGeomagnetic[1]));
+                Logger.l("Radian: " + Double.toString(radian));
+                double baselineDegrees = (baselineRadian * (360/(2*Math.PI)));
+                double degrees = (radian * (360/(2*Math.PI)));
+                //Logger.l("Angle: " + Double.toString(baselineDegrees) + "  |  "  + Double.toString(degrees));
+                double speedD = Math.abs(baselineDegrees - degrees);
+                Logger.l("Degrees diff: " + speedD);
+                long speed = Math.round(speedD);
+                mLastSpeed = speed;
+                Logger.l("Speed: " + Long.toString(speed) + " km/h");
                 EventBus.getDefault().post(new SpeedChangeEvent(speed, 90));
             }
 
