@@ -354,7 +354,7 @@ function showSplash(status, points) {
       var arr = ["Slow Down!", "What's The Rush?!", "No! No! No!"];
       var rnd = parseInt(Math.random() * arr.length);
       txt = arr[rnd];
-      splash_score.html("-" + String(points));
+      if (points > 0) splash_score.html("-" + String(points));
       clss = 'red';
       points = Math.max(0, (comboPoints - points));
       counter.update(points);
@@ -364,7 +364,7 @@ function showSplash(status, points) {
       var arr = ["What Are You Doing?!", "Are You Alive??", "Careful!"];
       var rnd = parseInt(Math.random() * arr.length);
       txt = arr[rnd];
-      splash_score.html("-" + String(points));
+      if (points > 0) splash_score.html("-" + String(points));
       clss = 'yellow';
       points = Math.max(0, (comboPoints - points));
       counter.update(points);
