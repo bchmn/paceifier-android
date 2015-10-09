@@ -40,8 +40,8 @@ public class GPSSpeedManager implements LocationListener {
 
     @Override
     public void onLocationChanged(Location location) {
-        float speedKPH = location.getSpeed()* 3600/1000;
-        EventBus.getDefault().post(new SpeedChangeEvent(speedKPH, 90));
+        //long speedKPH = location.getSpeed()* 3600/1000;
+        //EventBus.getDefault().post(new SpeedChangeEvent(speedKPH, 90));
     }
 
     @Override

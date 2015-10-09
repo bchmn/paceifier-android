@@ -60,18 +60,6 @@ public class DriveFragment extends BaseFragment {
         float finalScore = Float.parseFloat(finalScoreStr);
         if (true) {//finalScore > 1) {
             mActivity.startBraintreeActivity(finalScore);
-            /*Call<TokenResponse> call = mAPI.checkout()
-            call.enqueue(new Callback<TokenResponse>() {
-                @Override
-                public void onResponse(Response<TokenResponse> response, Retrofit retrofit) {
-                    mApp.setBrainTreeToken(response.body().getToken());
-                }
-
-                @Override
-                public void onFailure(Throwable t) {
-                    Logger.l(t.getMessage(), Logger.ERROR);
-                }
-            });*/
         } else {
             mActivity.showDialog("Nice Try", "Try again after you've drived");
         }
@@ -109,7 +97,7 @@ public class DriveFragment extends BaseFragment {
             @Override
             public void onPageFinished(WebView view, String url) {
             super.onPageFinished(view, url);
-            executeJS("window.pointsPerKm = " + 15);//mApp.getPricePerKm());
+            executeJS("window.pointsPerKm = " + mApp.getPricePerKm());
             }
         });
         mWebView.loadUrl("file:///android_asset/web/index.html");

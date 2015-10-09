@@ -12,7 +12,6 @@ import de.greenrobot.event.EventBus;
 import pacifier.com.app.events.AccelerationChangeEvent;
 import pacifier.com.app.events.SensorChangeEvent;
 import pacifier.com.app.events.SpeedChangeEvent;
-import pacifier.com.app.utils.Logger;
 
 public class TiltSpeedManager implements SensorEventListener{
     final Application mApp;
@@ -23,8 +22,8 @@ public class TiltSpeedManager implements SensorEventListener{
     float[] mGravity;
     float[] mPreviousGravity;
     float[] mGeomagnetic;
-    float[] mGeomagneticBaseline;
-    Long mLastSpeed;
+    Double mBaselineDegrees;
+    double mDegrees;
 
 
 
@@ -45,7 +44,6 @@ public class TiltSpeedManager implements SensorEventListener{
     public void startListening() {
         if (!isListening) {
             isListening = true;
-            mGeomagneticBaseline = null;
             mSensorManager.registerListener(this, mAccelerometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
             mSensorManager.registerListener(this, mMagnometerSensor, SensorManager.SENSOR_DELAY_NORMAL);
         }
@@ -59,8 +57,7 @@ public class TiltSpeedManager implements SensorEventListener{
     }
 
     public void resetBaseline() {
-        if (null != mGeomagnetic)
-            mGeomagneticBaseline = Arrays.copyOf(mGeomagnetic, mGeomagnetic.length);
+        mBaselineDegrees = null;
     }
 
     @Override
@@ -77,24 +74,29 @@ public class TiltSpeedManager implements SensorEventListener{
             else if (sensorEvent.sensor.getType() == Sensor.TYPE_MAGNETIC_FIELD)
             {
                 mGeomagnetic = sensorEvent.values;
-                if (null == mGeomagneticBaseline) {
-                    mGeomagneticBaseline = Arrays.copyOf(mGeomagnetic, mGeomagnetic.length);
-                }
             }
 
-            if (null != mGeomagneticBaseline && null != mGeomagnetic) {
-                double baselineRadian = Math.atan((double)(mGeomagneticBaseline[0]/mGeomagneticBaseline[1]));
-                double radian = Math.atan((double)(mGeomagnetic[0]/mGeomagnetic[1]));
-//                Logger.l("Radian: " + Double.toString(radian));
-                double baselineDegrees = (baselineRadian * (360/(2*Math.PI)));
-                double degrees = (radian * (360/(2*Math.PI)));
-                //Logger.l("Angle: " + Double.toString(baselineDegrees) + "  |  "  + Double.toString(degrees));
-                double speedD = Math.abs(baselineDegrees - degrees);
-                Logger.l("Degrees diff: " + speedD);
-                long speed = Math.round(speedD);
-                mLastSpeed = speed;
-                Logger.l("Speed: " + Long.toString(speed) + " km/h");
-                EventBus.getDefault().post(new SpeedChangeEvent(speed, 90));
+            if (null != mGravity && null != mGeomagnetic) {
+                float R[] = new float[9];
+                float I[] = new float[9];
+                boolean success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic);
+                if (success) {
+                    float orientation[] = new float[3];
+                    SensorManager.getOrientation(R, orientation);
+                    mDegrees = Math.toDegrees(orientation[0]);
+                    if (mBaselineDegrees == null)
+                        mBaselineDegrees = mDegrees;
+                    double degreesDiff = mDegrees - mBaselineDegrees;
+                    if (degreesDiff > 180)
+                        degreesDiff -= 360;
+                    if (degreesDiff < -180)
+                        degreesDiff += 360;
+
+                    //Logger.l("Degrees: " + Double.toString(mBaselineDegrees) + "  |  "  + Double.toString(mDegrees));
+                    int speed = (int)Math.round(Math.min(140, Math.max(0, degreesDiff)));
+                    //Logger.l("Speed: " + Integer.toString(speed) + " km/h");
+                    EventBus.getDefault().post(new SpeedChangeEvent(speed, 90));
+                }
             }
 
             if (null != mGravity && null != mGeomagnetic) {
@@ -107,7 +109,7 @@ public class TiltSpeedManager implements SensorEventListener{
                         mOrientationString[i] = Float.toString(mOrientation[i]);
                     }
                 }
-                EventBus.getDefault().post(new SensorChangeEvent(mAccelerometer, mMagnetic, mOrientationString));
+                //EventBus.getDefault().post(new SensorChangeEvent(mAccelerometer, mMagnetic, mOrientationString));
             }
 
             if (null != mGravity)

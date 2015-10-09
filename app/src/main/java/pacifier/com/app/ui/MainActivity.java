@@ -12,6 +12,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 
 import com.braintreepayments.api.dropin.BraintreePaymentActivity;
+import com.braintreepayments.api.dropin.Customization;
 import com.github.rahatarmanahmed.cpv.CircularProgressView;
 
 import javax.inject.Inject;
@@ -99,7 +100,12 @@ public class MainActivity extends AppCompatActivity {
     public void startBraintreeActivity(float amount) {
         Intent intent = new Intent(MainActivity.this, BraintreePaymentActivity.class);
         intent.putExtra(BraintreePaymentActivity.EXTRA_CLIENT_TOKEN, mApp.getBrainTreeToken());
-        intent.putExtra(BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE, "fake-valid-mastercard-nonce");
+        Customization customization = new Customization.CustomizationBuilder()
+                .primaryDescription("You're a safe driver!")
+                .amount("$" + Math.ceil(amount))
+                .submitButtonText("Pay Up!")
+                .build();
+        intent.putExtra(BraintreePaymentActivity.EXTRA_CUSTOMIZATION, customization);
         startActivityForResult(intent, Conf.BRAINTREE_REQUEST_CODE);
     }
 
@@ -115,8 +121,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == Conf.BRAINTREE_REQUEST_CODE) {
             if (resultCode == BraintreePaymentActivity.RESULT_OK) {
-                String paymentMethodNonce = data.getStringExtra(BraintreePaymentActivity.EXTRA_PAYMENT_METHOD_NONCE);
-                /*postNonceToServer(paymentMethodNonce);*/
+                setFragment(new StartFragment(), false);
             }
         }
     }

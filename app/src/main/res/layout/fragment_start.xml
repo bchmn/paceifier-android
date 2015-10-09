@@ -61,7 +61,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_horizontal"
                 android:textSize="72sp"
-                android:text="20"/>
+                android:text="90"/>
         </LinearLayout>
         <TextView
             android:layout_width="wrap_content"
@@ -73,8 +73,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/seekBar"
-            android:progress="20"
-            android:max="20"
+            android:progress="90"
+            android:max="100"
             android:indeterminate="false" />
     </LinearLayout>
 
