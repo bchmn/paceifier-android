@@ -314,7 +314,7 @@ function checkSpeed() {
     var kmPerSec = window.speed / 60 / 60;
     comboPoints += kmPerSec * pointsPerKm * combo / 5;
   } else {
-    showSplash('bad', 1);
+    showSplash('bad', Math.min(Math.abs(parseInt((speed - window.speedLimit) / 5)), 10));
     comboPoints -= (speed - window.speedLimit);
   }
   comboPoints = Math.max(0, (comboPoints));
@@ -328,7 +328,7 @@ function checkSpeed() {
     if (comboTime > (combo * 4)) {
       //next stage!
       comboStartTime = new Date();
-      if (combo <= 5) combo++;
+      if (combo < 5) combo++;
       showSplash('good', combo);
       $('#combo').html("x" + String(combo));
       $('#next-combo').html("x" + String(combo + 1));
@@ -342,7 +342,7 @@ function showSplash(status, points) {
 
   var now = (new Date()).getTime();
 
-  if (now - lastSplash < 3000) return;
+  if (status == 'bad' && (now - lastSplash < 3000)) return;
 
   lastSplash = now;
 
@@ -363,11 +363,11 @@ function showSplash(status, points) {
 
       break;
     case 'boom':
-      var arr = ["Boom!", "Are You Alive??", "Careful!"];
+      var arr = ["What Are You Doing?!", "Are You Alive??", "Careful!"];
       var rnd = parseInt(Math.random() * arr.length);
       txt = arr[rnd];
       splash_score.html("-" + String(points));
-      clss = 'red';
+      clss = 'yellow';
       points = Math.max(0, (comboPoints - points));
       counter.update(points);
 
@@ -401,16 +401,23 @@ function showSplash(status, points) {
   }, 1700);
 }
 
+var lastSpeed = window.speed;
 function checkAccelaration() {
-  if (window.acc > 1.5) {
-    var cont = $('.container');
-    cont.removeClass('pulse');
+  if (Math.abs(lastSpeed - window.speed) > 20) {
+    var cont = $('body');
+    combo = 0;
+    $('#combo').html('');
     showSplash('boom', 20);
+    cont.removeClass('shake');
     setTimeout(function () {
-      cont.addClass('pulse');
+      cont.addClass('shake');
+      setTimeout(function () {
+        cont.removeClass('shake');
+      }, 1500);
     }, 100);
+  }else {
   }
-  //console.log('acceleration', acceleration);
+  lastSpeed = window.speed;
 }
 
 function pulse() {
