@@ -14,12 +14,14 @@ import de.greenrobot.event.EventBus;
 import pacifier.com.app.R;
 import pacifier.com.app.events.SensorChangeEvent;
 import pacifier.com.app.managers.TiltSpeedManager;
+import pacifier.com.app.network.APIService;
 
 /**
  * Created by bachman on 8/10/15.
  */
-public class SettingsFragment extends BaseFragment {
+public class SensorsFragment extends BaseFragment {
     @Inject TiltSpeedManager mSpeedManager;
+    @Inject APIService mAPI;
 
     @Bind(R.id.tvAccelerometerX) TextView mAccelerometerX;
     @Bind(R.id.tvAccelerometerY) TextView mAccelerometerY;
@@ -44,7 +46,7 @@ public class SettingsFragment extends BaseFragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_settings, container, false);
+        return inflater.inflate(R.layout.fragment_sensors, container, false);
     }
 
     @Override
@@ -57,6 +59,7 @@ public class SettingsFragment extends BaseFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         mSpeedManager.startListening();
+
     }
 
     public void onEvent(SensorChangeEvent event) {

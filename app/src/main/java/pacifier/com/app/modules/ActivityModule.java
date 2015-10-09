@@ -7,7 +7,7 @@ import dagger.Provides;
 import pacifier.com.app.ui.BaseFragment;
 import pacifier.com.app.ui.DriveFragment;
 import pacifier.com.app.ui.MainActivity;
-import pacifier.com.app.ui.SettingsFragment;
+import pacifier.com.app.ui.SensorsFragment;
 import pacifier.com.app.ui.StartFragment;
 
 @Module(
@@ -16,7 +16,7 @@ import pacifier.com.app.ui.StartFragment;
         MainActivity.class,
         BaseFragment.class,
         StartFragment.class,
-        SettingsFragment.class,
+        SensorsFragment.class,
         DriveFragment.class
     }
 )

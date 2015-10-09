@@ -1,9 +1,11 @@
 package pacifier.com.app.events;
 
 public class SpeedChangeEvent {
-    public final float speedInMeters;
+    public final float speed;
+    public final int speedLimit;
 
-    public SpeedChangeEvent(float speedInMeters) {
-        this.speedInMeters = speedInMeters;
+    public SpeedChangeEvent(float speed, int speedLimit) {
+        this.speed = speed;
+        this.speedLimit = speedLimit;
     }
 }

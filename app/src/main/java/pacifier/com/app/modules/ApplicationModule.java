@@ -34,7 +34,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Application provideApplication() { return this.app; }
+    PaceifierApp provideApplication() { return this.app; }
 
     @Provides @Singleton
     LocationManager provideLocationManager() { return (LocationManager)app.getSystemService(LOCATION_SERVICE); }
@@ -43,8 +43,8 @@ public class ApplicationModule {
     SensorManager provideSensorManager() { return (SensorManager)app.getSystemService(Context.SENSOR_SERVICE); }
 
     @Provides @Singleton
-    GPSSpeedManager providerGPSSpeedManager(Application App, LocationManager locationManager) { return new GPSSpeedManager(app, locationManager); }
+    GPSSpeedManager providerGPSSpeedManager(PaceifierApp App, LocationManager locationManager) { return new GPSSpeedManager(app, locationManager); }
 
     @Provides @Singleton
-    TiltSpeedManager providerTiltSpeedManager(Application App, SensorManager sensorManager) { return new TiltSpeedManager(app, sensorManager); }
+    TiltSpeedManager providerTiltSpeedManager(PaceifierApp App, SensorManager sensorManager) { return new TiltSpeedManager(app, sensorManager); }
 }

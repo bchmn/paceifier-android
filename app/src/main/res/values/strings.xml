@@ -3,4 +3,5 @@
     <string name="parent_email">Parent Email</string>
     <string name="driver_email">Driver Email</string>
     <string name="start">Start</string>
+    <string name="done_driving">Claim My Money</string>
 </resources>
