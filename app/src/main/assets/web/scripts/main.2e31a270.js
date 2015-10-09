@@ -274,7 +274,7 @@ function speedometerInit() {
 
 function setSpeedometer(speed) {
   speed = Math.min(140, speed);
-  var speedPercentage = Number(speed / 140) * 100;
+  var speedPercentage = parseInt((speed / 140) * 100);
   speedometer.attr('data-progress', speedPercentage);
   speedometer.find('.numbers span').html(speed);
 }
