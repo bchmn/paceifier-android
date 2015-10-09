@@ -230,7 +230,7 @@ var outAnimation = 'fadeOut';
 
 window.speed = 0;
 window.acc = 0;
-window.speedLimit = 90;
+window.speedLimit = 70;
 window.pointsPerKm = 20;
 
 window.onload = (function () {
@@ -273,7 +273,9 @@ function speedometerInit() {
 }
 
 function setSpeedometer(speed) {
-  speedometer.attr('data-progress', speed);
+  speed = Math.min(140, speed);
+  var speedPercentage = Number(speed / 140) * 100;
+  speedometer.attr('data-progress', speedPercentage);
   speedometer.find('.numbers span').html(speed);
 }
 
@@ -400,7 +402,7 @@ function showSplash(status, points) {
 }
 
 function checkAccelaration() {
-  if (window.acc > 1) {
+  if (window.acc > 1.5) {
     var cont = $('.container');
     cont.removeClass('pulse');
     showSplash('boom', 20);
