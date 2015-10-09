@@ -342,9 +342,7 @@ function showSplash(status, points) {
 
   var now = (new Date()).getTime();
 
-  if (status == 'bad' && (now - lastSplash < 3000)) return;
-
-  lastSplash = now;
+  if ((now - lastSplash < 3000)) return;
 
   var splash = $('.splash');
   var splash_text = $('.splash .text');
@@ -360,7 +358,7 @@ function showSplash(status, points) {
       clss = 'red';
       points = Math.max(0, (comboPoints - points));
       counter.update(points);
-
+      lastSplash = now;
       break;
     case 'boom':
       var arr = ["What Are You Doing?!", "Are You Alive??", "Careful!"];
@@ -370,7 +368,7 @@ function showSplash(status, points) {
       clss = 'yellow';
       points = Math.max(0, (comboPoints - points));
       counter.update(points);
-
+      lastSplash = now;
       break;
     case 'good':
       var arr = ["Doing Great!", "Nice Job!", "Great!"];
@@ -378,8 +376,6 @@ function showSplash(status, points) {
       txt = arr[rnd];
       splash_score.html("x" + String(points));
       clss = 'yellow';
-      //comboPoints += points;
-      //counter.update(comboPoints + points);
       break;
     default:
       clss = 'yellow';
