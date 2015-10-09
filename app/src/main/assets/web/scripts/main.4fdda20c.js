@@ -219,9 +219,11 @@ var acceleration;
 
 var points = 0;
 var last_acc = 0;
-var combo = 0;
+var combo = 1;
 var comboPoints = 0;
-
+var comboStartTime = new Date();
+var comboPercent = 0;
+var lastSplash = (new Date()).getTime();
 window.speed = 0;
 window.acc = 0;
 window.speedLimit = 90;
@@ -239,7 +241,7 @@ window.onload = (function () {
       checkSpeed(window.speed);
       checkAccelaration(rndAcc);
 
-    }, 1000);
+    }, Math.max((700 - combo * 100), 100));
 
   }, 500);
 
@@ -247,7 +249,7 @@ window.onload = (function () {
 
 function countUpInit() {
   var options = {
-    useEasing: true,
+    useEasing: false,
     useGrouping: true,
     separator: ',',
     decimal: '.'
@@ -269,11 +271,21 @@ function setPoints(points) {
   if (points > window.points) {
     //getting more points = good driver
     counter.update(points);
+    $('#counter').removeClass('bad');
+    $('#counter').addClass('good');
     pulse();
   } else if (points < window.points) {
     //getting lerss points = bad driver
+
+    $('#counter').removeClass('good');
+    $('#counter').addClass('bad');
+
+    combo = 0;
+    $('#combo').html('');
+
     counter.update(points);
     drop();
+
   }
 
   window.points = points;
@@ -285,22 +297,94 @@ function checkSpeed() {
 
   //check speed limit and give points
   if (speed <= window.speedLimit) {
+    //good job
     var kmPerSec = window.speed / 60 / 60;
-    comboPoints += /*(Math.random() * 0.1)  */ kmPerSec * pointsPerKm;
+    comboPoints += /*(Math.random() * 0.1)  */ kmPerSec * pointsPerKm * combo / 5;
   } else {
+    showSplash('bad', 1);
     comboPoints -= (speed - window.speedLimit);
   }
   setPoints(comboPoints);
+
+  //check if combo if there
+  if ((speed > 0) && (speed <= window.speedLimit)) {
+    var comboTime = ((new Date()).getTime() - comboStartTime.getTime()) / 1000;
+    comboPercent = (comboTime / (combo*4));
+    $('#combo-bar').css('width', parseInt(comboPercent*100) + '%');
+    if (comboTime > (combo * 4)) {
+      //next stage!
+      comboStartTime = new Date();
+      if (combo <=5) combo++;
+      showSplash('good', combo);
+      $('#combo').html("x" + String(combo));
+      $('#next-combo').html("x" + String(combo+1));
+      $('#counter').removeClass('combo-' + (combo - 1));
+      $('#counter').addClass('combo-' + combo);
+    }
+  }
 }
+
+function showSplash(status, points) {
+
+  var now = (new Date()).getTime();
+
+  if (now - lastSplash < 3000) return;
+
+  lastSplash = now;
+
+  var splash = $('.splash');
+  var splash_text = $('.splash .text');
+  var splash_score = $('.splash .score');
+  var txt = '';
+  var clss = '';
+  switch (status) {
+    case 'bad':
+      var arr = ["Slow Down!", "Careful!", "No! No! No!"];
+      var rnd = parseInt(Math.random() * arr.length);
+      txt = arr[rnd];
+      splash_score.html("-" + String(points));
+      clss = 'red';
+      comboPoints -= points;
+      counter.update(comboPoints - points);
+
+      break;
+    case 'good':
+      var arr = ["Doing Great!", "Nice Job!", "Great!"];
+      var rnd = parseInt(Math.random() * arr.length);
+      txt = arr[rnd];
+      splash_score.html("x" + String(points));
+      clss = 'yellow';
+      //comboPoints += points;
+      //counter.update(comboPoints + points);
+      break;
+    default:
+      clss = 'yellow';
+      splash_text.html(status);
+  }
+
+  splash_text.html(txt);
+  splash.removeClass('red');
+  splash.removeClass('green');
+  splash.removeClass('yellow');
+  splash.addClass(clss);
+
+  var inAnimation = 'zoomInDown';
+  var outAnimation = 'flipOutX';
+  splash.removeClass(outAnimation);
+  splash.removeClass(inAnimation);
+  splash.addClass(inAnimation);
+  setTimeout(function() {
+    splash.removeClass(inAnimation);
+    splash.addClass(outAnimation);
+  }, 3000);
+}
+
 
 function checkAccelaration(acceleration) {
   console.log('acceleration', acceleration);
 }
 
 function pulse() {
-
-  $('#counter').removeClass('bad');
-  $('#counter').addClass('good');
 
   clearAnimation();
   setTimeout(function () {
@@ -310,13 +394,10 @@ function pulse() {
 
 function drop() {
 
-  $('#counter').removeClass('bad');
-  $('#counter').addClass('bad');
-
   clearAnimation();
   setTimeout(function () {
 
-    //$('#counter').addClass('shake')
+    $('#counter').addClass('tada')
 
   }, 100);
 
@@ -324,5 +405,5 @@ function drop() {
 
 function clearAnimation() {
   $('#counter').removeClass('pulse');
-  //$('#counter').removeClass('shake');
+  $('#counter').removeClass('tada');
 }
