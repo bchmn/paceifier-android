@@ -85,7 +85,7 @@ public class TiltSpeedManager implements SensorEventListener{
             if (null != mGeomagneticBaseline && null != mGeomagnetic) {
                 double baselineRadian = Math.atan((double)(mGeomagneticBaseline[0]/mGeomagneticBaseline[1]));
                 double radian = Math.atan((double)(mGeomagnetic[0]/mGeomagnetic[1]));
-                Logger.l("Radian: " + Double.toString(radian));
+//                Logger.l("Radian: " + Double.toString(radian));
                 double baselineDegrees = (baselineRadian * (360/(2*Math.PI)));
                 double degrees = (radian * (360/(2*Math.PI)));
                 //Logger.l("Angle: " + Double.toString(baselineDegrees) + "  |  "  + Double.toString(degrees));
